@@ -1,0 +1,2 @@
+/nginx/cert/front-selfsigned.*
+/janus/cert/front-selfsigned.*

@@ -1,0 +1,63 @@
+version: "3.3"
+
+services:
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+        - '80:80'
+        - '443:443' 
+    volumes:
+        - ./html:/var/www/html/
+    restart: always
+    container_name: webrtc_nginx
+    networks:
+      - video-conference
+
+  php:
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+    ports:
+      - 9002:9000
+    volumes:
+      - ./html:/var/www/html
+    networks:
+      - video-conference
+    restart: always
+    container_name: webrtc_php
+
+  janus:
+    build:
+      context: ./janus
+      dockerfile: Dockerfile
+    ports:
+      - '8088:8088' #janus http
+      - '8089:8089' #janus https
+      - '8188:8188' #janus ws
+      - '8989:8989' #janus wss
+      - "7088:7088"
+      - "7089:7089"
+    volumes:
+      - "./janus/etc/janus.transport.websockets.jcfg:/opt/janus/etc/janus/janus.transport.websockets.jcfg"
+    networks:
+      - video-conference
+    restart: always
+    container_name: webrtc_janus
+
+  rabbitmq:
+     build:
+        dockerfile: Dockerfile
+        context: ./rabbitmq
+     restart: unless-stopped
+     ports:
+        - '1883:1883' # MQTT
+        - '5672:5672'
+        - '15675:15675' #web MQTT
+        - '15692:15692'
+     container_name: webrtc_rabbitmq     
+
+networks:
+  video-conference:
+    driver: bridge

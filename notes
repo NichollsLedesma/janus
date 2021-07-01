@@ -1,0 +1,48 @@
+Docker 1
+*********
+
+https://github.com/bartbalaz/janus-container
+
+docker run --rm -d -p 8089:8089 -p 7889:7889 \
+	-v /etc/letsencrypt/live/<host>.<domain>:/etc/certs \
+	-v /etc/letsencrypt/archive:/archive \
+	-v /var/janus/recordings:/janus/bin/janus-recordings \
+	-v <clone folder>/janus_config:/janus/etc/janus_host -e "RUN_WITH_HOST_CONFIGURATION_DIR=true" \
+	-v /var/www/html/container:/html -e "COPY_JANUS_SAMPLES=true" \
+-e "CONFIG_GEN_SCRIPT=<configuration_generation_script>"
+	some.container.registry.com/janus:some_tag
+
+Cert
+****
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout front-selfsigned.key -out front-selfsigned.crt
+sudo chown nbulian:nbulian front-selfsigned.*
+
+Janus
+*****
+https://github.com/canyanio/janus-gateway-docker
+
+docker-compose up
+
+HTTP Server
+***********
+docker run --rm -it -p 80:80 --name apache-app -v "$PWD":/var/www/html php:7.2-apache
+
+Docker
+******
+## Stop all containers
+docker stop $(docker ps -aq)
+
+## delete all images
+docker rmi -f $(docker images -a -q)
+
+## Remove all stopped containers
+docker container prune
+
+## Remove all unused volumes
+docker volume prune
+
+## Remove unused images
+docker image prune
+
+# All of the above, in this order: containers, volumes, images
+docker system prune
