@@ -41,6 +41,7 @@ services:
       - "7089:7089"
     volumes:
       - "./janus/etc/janus.transport.websockets.jcfg:/opt/janus/etc/janus/janus.transport.websockets.jcfg"
+      - "./janus/etc/janus.jcfg:/opt/janus/etc/janus/janus.jcfg"
     networks:
       - video-conference
     restart: always
