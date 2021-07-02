@@ -15,7 +15,7 @@ docker run --rm -d -p 8089:8089 -p 7889:7889 \
 Cert
 ****
 sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout front-selfsigned.key -out front-selfsigned.crt
-sudo chown nbulian:nbulian front-selfsigned.*
+sudo chown nicholls:nicholls front-selfsigned.*
 
 Janus
 *****
